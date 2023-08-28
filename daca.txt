@@ -1,0 +1,74 @@
+Title: DACA "Flowchart"
+Author: Will McCarthy
+Before: <link rel="stylesheet" type="text/css" href="https://suffolklitlab.org/howto/qna/style/style.css">
+<div id="icon" style="background-size: 110px 99px;background-image: url('https://suffolklitlab.org/howto/qna/images/maxheadroom.gif');"></div>
+<h2 style="text-align:center;">DACA "Flowchart"</h2>
+<p><b>This is a <a href="https://www.codingthelaw.org/#mission">class project</a>. You should not rely on it as a source of legal information!</b></p>
+<p>Answer the following questions to see if someone qualifies for DACA.</p>
+
+
+Q(1):Is their birthday on or after June 16, 1981
+A:No
+	Q(1.1): The individual is ineligible
+A:Yes
+	Q(1.2): Did they enter the US before their 16th birthday?
+	A:No
+		Q(1.2.1): The individual is ineligible
+	A:Yes:
+		Q(1.2.2): Were they in the US on June 15, 2012?
+		A:No
+			Q(1.2.2.1): The individual is ineligible
+		A:Yes
+			Q(1.2.2.2): Have they continuously reside in the US since June 15, 2007?
+			A:No
+				Q(1.2.2.2.1):The individual is ineligible
+			A:Yes
+				Q(1.2.2.2.2):Were they out of status on June 15, 2012?
+				A:No
+					Q(1.2.2.2.2.1):GOTO:1.1
+				A:Yes
+					Q(1.2.2.2.2.2):GOTO:2
+
+
+Q(2):Have they been convicted of a felony or a significant misdemeanor?
+A:Yes
+	Q(2.1):GOTO:1.1
+A:No
+	Q(2.2):Have they been convicted of more than one misdemeanor?
+	A:Yes
+		Q(2.2.1):GOTO:1.1
+	A:No
+		Q(2.2.2):Do they pose a threat to national security or public safety?
+		A:Yes
+			Q(2.2.2.1):GOTO:1.1
+		A:No
+			Q(2.2.2.2):GOTO:3
+
+
+Q(3):Are they currently in school?
+A:Yes
+	Q(3.1):GOTO:fifteen
+A:No
+	Q(3.2):Do they have a HS diploma or GED?
+	A:Yes
+		Q(3.2.1):GOTO:fifteen
+	A:No
+		Q(3.2.2):Are they an honorably discharged veteran of the Coast Guard or Armed Forces of the US?
+		A:Yes
+			Q(3.2.2.1): This individual is eligible
+		A:No
+			Q(3.2.2.2):Eligibility cannot be determined
+
+
+Q(fifteen):Are they 15 or older?
+A:Yes
+	Q(fifteen.1):This individual is eligible
+A:No
+	Q(fifteen.2):GOTO:removal
+
+
+Q(removal):Currently in removal proceedings, or have a final removal or VD order?
+A:Yes
+	Q(removal.1):This individual is eligible
+A:No
+	Q(removal.2):Eligibility cannot be determined 
