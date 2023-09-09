@@ -1,0 +1,123 @@
+Title: Indigency "Flowchart"
+Author: Will McCarthy
+Before: <link rel="stylesheet" type="text/css" href="https://suffolklitlab.org/howto/qna/style/style.css">
+<div id="icon" style="background-size: 110px 99px;background-image: url('https://suffolklitlab.org/howto/qna/images/maxheadroom.gif');"></div>
+<h2 style="text-align:center;">Indigency "Flowchart"</h2>
+<p><b>This is a <a href="https://www.codingthelaw.org/level/2/#mission_p1">class project</a>. You should not rely on it as a source of legal information!</b></p>
+<p>Answer the following questions to see if you qualify for appointed counsel in [insert state name].</p>
+
+Q(intro):Will the state appoint counsel?
+A:Start Questionnaire
+	Q(intro.1):GOTO:age
+
+Q(age):Are they a minor?
+A:Yes
+	Q(age.1):Their annual household income will be based on their parent(s)' income.
+	A:Next Question
+		Q(age.1.1):GOTO:crime
+A:No
+	Q(age.2):Are they a dependent?
+	A:Yes
+		Q(age.2.1):Their annual household income will be based on their parent(s)' income.
+		A:Next Question
+			Q(age.2.1.1):GOTO:crime
+	A:No
+		Q(age.2.2):Are they single or partnered?
+		A:Single
+			Q(age.2.2.1):Their annual household income will be based on their own annual income.
+			A:Next Question
+				Q(age.2.2.1.1):GOTO:crime
+		A:Partnered
+			Q(age.2.2.2):GOTO:AnB
+
+Q(AnB):Were they charged with assault & battery against their partner?
+A:Yes
+	Q(AnB.1.1):Do not include their partner's income into their annual household income.
+	A:Next Question
+		Q(AnB.1.1.1):GOTO:crime
+A:No
+	Q(crime.2.2):Their annual household income will be based on their and their partner's combined income.
+	A:Next Question
+		Q(AnB.2.2.1):GOTO:crime
+
+Q(crime):Were they charged with a misdemeanor or felony?
+A:Misdemeanor
+	Q(crime.1):GOTO:m
+A:Felony
+	Q(crime.2):GOTO:f
+
+Q(m):How many people live in their household (including themselves)?
+A:1
+	Q(m.1):Is their annual household income below $17,505?
+	A:Yes
+		Q(m.1.1):The state will appoint counsel. 
+	A:No
+		Q(m.1.2):The state won't appoint counsel. 
+A:2
+	Q(m.2):Is their annual household income below $23,595?
+	A:Yes
+		Q(m.2.1):The state will appoint counsel. 
+	A:No
+		Q(m.2.2):The state won't appoint counsel. 
+A:3
+	Q(m.3):Is their annual household income below $29,685?
+	A:Yes
+		Q(m.3.1):The state will appoint counsel. 
+	A:No
+		Q(m.3.2):The state won't appoint counsel. 
+A:4
+	Q(m.4):Is their annual household income below $35,775?
+	A:Yes
+		Q(m.4.1):The state will appoint counsel. 
+	A:No
+		Q(m.4.2):The state won't appoint counsel. 
+A:5
+	Q(m.5):Is their annual household income below $41,865?
+	A:Yes
+		Q(m.5.1):The state will appoint counsel. 
+	A:No
+		Q(m.5.2):The state won't appoint counsel. 
+A:6
+	Q(m.6):Is their annual household income below $47,955?
+	A:Yes
+		Q(m.6.1):The state will appoint counsel. 
+	A:No
+		Q(m.6.2):The state won't appoint counsel. 
+
+Q(f):How many people live in their household (including themselves)?
+A:1
+	Q(f.1):Is their annual household income below $23,340?
+	A:Yes
+		Q(f.1.1):The state will appoint counsel. 
+	A:No
+		Q(f.1.2):The state won't appoint counsel. 
+A:2
+	Q(f.2):Is their annual household income below $31,460?
+	A:Yes
+		Q(f.2.1):The state will appoint counsel. 
+	A:No
+		Q(f.2.2):The state won't appoint counsel. 
+A:3
+	Q(f.3):Is their annual household income below $39,580?
+	A:Yes
+		Q(f.3.1):The state will appoint counsel. 
+	A:No
+		Q(f.3.2):The state won't appoint counsel. 
+A:4
+	Q(f.4):Is their annual household income below $47,700?
+	A:Yes
+		Q(f.4.1):The state will appoint counsel. 
+	A:No
+		Q(f.4.2):The state won't appoint counsel. 
+A:5
+	Q(f.5):Is their annual household income below $55,820?
+	A:Yes
+		Q(f.5.1):The state will appoint counsel. 
+	A:No
+		Q(f.5.2):The state won't appoint counsel. 
+A:6
+	Q(f.6):Is their annual household income below $63,940?
+	A:Yes
+		Q(f.6.1):The state will appoint counsel. 
+	A:No
+		Q(f.6.2):The state won't appoint counsel. 
