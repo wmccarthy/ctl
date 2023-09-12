@@ -1,0 +1,96 @@
+Title: Indigency "Flowchart"
+Author: Will McCarthy
+Before: <link rel="stylesheet" type="text/css" href="https://suffolklitlab.org/howto/qna/style/style.css">
+<div id="icon" style="background-size: 110px 99px;background-image: url('https://suffolklitlab.org/howto/qna/images/maxheadroom.gif');"></div>
+<h2 style="text-align:center;">Indigency "Flowchart"</h2>
+<p><b>This is a <a href="https://www.codingthelaw.org/level/2/#mission_p1">class project</a>. You should not rely on it as a source of legal information!</b></p>
+<p>Answer the following questions to see if you qualify for appointed counsel in [insert state name].</p>
+After:
+<script>
+function fedpov(house,income,percentage){
+	// Determines if your income is less than or equal to
+	// a percentage of the 2023 federal poverty guidelines
+	// for the contiguous United States. See
+	// https://aspe.hhs.gov/poverty-guidelines
+
+		var line = NaN;
+
+		if (house == 1) {
+			line = 14580;
+		} else if (house == 2) {
+			line = 19720;
+		} else if (house == 3) {
+			line = 24860;
+		} else if (house == 4) {
+			line = 30000;
+		} else if (house == 5) {
+			line = 35140;
+		} else if (house == 6) {
+			line = 40280;
+		} else if (house == 7) {
+			line = 45420;
+		} else if (house == 8) {
+			line = 50560;
+		} else if (house > 8) {
+			line = 50560 + (house-8)*5140;
+		}
+
+		if (income <= (line*(percentage/100))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+</script>
+
+Q(intro):Will the state appoint counsel?
+A:Start Questionnaire
+	Q(intro.1):GOTO:age
+
+Q(age):Are they a minor?
+A:Yes
+	Q(age.1):Their annual household income will be based on their parent(s)' income.
+	A:Next Question
+		Q(age.1.1):GOTO:house
+A:No
+	Q(age.2):Are they a dependent?
+	A:Yes
+		Q(age.2.1):Their annual household income will be based on their parent(s)' income.
+		A:Next Question
+			Q(age.2.1.1):GOTO:house
+	A:No
+		Q(age.2.2):Are they single or partnered?
+		A:Single
+			Q(age.2.2.1):Their annual household income will be based on their own annual income.
+			A:Next Question
+				Q(age.2.2.1.1):GOTO:house
+		A:Partnered
+			Q(age.2.2.2):GOTO:AnB
+
+Q(AnB):Were they charged with assault & battery against their partner?
+A:Yes
+	Q(AnB.1.1):Do not include their partner's income into their annual household income.
+	A:Next Question
+		Q(AnB.1.1.1):GOTO:house
+A:No
+	Q(crime.2.2):Their annual household income will be based on their and their partner's combined income.
+	A:Next Question
+		Q(AnB.2.2.1):GOTO:house
+
+Q(house):How many people are in their household (including themselves)?
+X:number
+	Q(income):What is their annual household income after tax dollars?
+	X:number
+		Q(crime):Were they charged with a misdemeanor or felony?
+		A[javascript:if (fedpov(getvar('house'),getvar('income'),150)){ goto('qualmis') } else { goto('noqualmis') } ]: misdemeanor
+		A[javascript:if (fedpov(getvar('house'),getvar('income'),200)){ goto('qualfel') } else { goto('noqualcrim') } ]: felony
+
+Q(qualmis): You probably qualify as indigent since you earn less than 150% of the poverty line.
+Q(noqualmis): You probably won't qualify as indigent since you earn at least 150% of the poverty line.
+
+Q(qualfel): You probably qualify as indigent since you earn less than 200% of the poverty line.
+Q(noqualfel): You probably won't qualify as indigent since you earn at least 200% of the poverty line.
+
+
+
+
