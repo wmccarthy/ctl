@@ -1,0 +1,963 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+#  - docassemble.ALAnyState:any_state.yml
+# There was an error when Matt (ILAO) ran the program
+---
+metadata:
+  title: >-
+    cit_debtor_employer1
+  short title: >-
+    cit_debtor_employer1
+  description: |-
+    This interview helps someone in Illinois request information from the debtor's employer regarding the debtor's salary and wages.
+  tags: []
+  authors:
+    - William X. McCarthy
+  original_form:
+    - https://ilcourtsaudio.blob.core.windows.net/antilles-resources/resources/a46da08b-2fac-4501-901f-a8b6cec0f2ff/Citation_Debtors_Employer.pdf
+  help_page_url: >-
+    https://www.illinoiscourts.gov/forms/approved-forms/forms-approved-forms-circuit-court/post-judgment-collection/
+  help_page_title: >-
+    Illinois Legal Aid
+  allowed_courts: []
+  typical_role: "unknown"
+  al_weaver_version: "1.10.3"
+  generated_on: "2023-11-28"
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "IL"
+---
+code: |
+  github_repo_name =  'docassemble-CitationDebtorsEmployerpdfFilena'
+---
+code: |
+  interview_short_title = "Citation to Discover Assets to Debtor's Employer."
+---
+code: |
+  al_form_type = "existing_case" 
+---
+objects:
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+  - other_parties: ALPeopleList.using(ask_number=True, target_number=0)
+---
+sections:
+  - review_citation_debtors_employerpdf_filena: Review your answers
+---
+features:
+  question help button: True
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_citation_debtors_employerpdf_filena
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = []
+  nav.set_section("review_citation_debtors_employerpdf_filena")
+  # Below sets the user_role and user_ask_role by asking a question.
+  # You can set user_ask_role directly instead to either 'plaintiff' or 'defendant'
+  user_role = "plaintiff"
+  user_ask_role = "plaintiff"
+  not_legal_advice
+  info_needed
+  age_of_judgment
+  judgment_date
+  users.gather()
+  set_parts(subtitle=str(users))
+  users[0].address.address
+  users_contact
+  users_attorneys_phone_number
+  plaintiffs_full_name
+  defendants_full_name
+  debtors_info
+  respondents_name0
+  respondents_address0
+  circuit_court_county0
+  docket_number0
+  judgment_amount
+  owed_amount
+  Hearing_Date_and_Time
+  In_Person_or_Remote
+  # used if-else logic to separate the information needed to fill out depending on if the hearing is set to be in-person or remote
+  if in_person == True:
+    In_Person_Court_Room
+    courts_address
+  elif by_phone_video == True:
+    Remote_Hearing_Information
+    circuit_clerk_office_phone_number
+  else:
+    users[0].signature
+  users[0].signature
+  After_Filing_with_the_Court
+  interview_order_citation_debtors_employerpdf_filena = True
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  citation_debtors_employerpdf_filena_intro
+  interview_order_citation_debtors_employerpdf_filena
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  citation_debtors_employerpdf_filena_download
+---
+comment: |
+  This question is used to introduce your interview. Please customize
+id: cit_debtor_employer1
+continue button field: citation_debtors_employerpdf_filena_intro
+question: |
+  Getting Information from the Employer
+subquestion: |
+  This program will help you prepare a form called the *Citation To Discover Assets To Debtor's Employer*. 
+  
+  When you win a lawsuit against another person, you will be given a judgment against them, saying that the person, also known as the debtor, will owe you money.
+  
+  This form will help you get information from the ddebtor's employer, so that you may collect money from the employer. 
+  
+  The form you create with this program can only be used in Illinois.
+  
+  Most people take about 10-15 minutes to finish this interview.
+---
+comment: |
+  Information screen to inform the user that this program does not provide legal advice, also provides a link for the user to find a lawyer.
+id: not_legal_advice
+question: |
+  IMPORTANT: Not Legal Advice
+subquestion: |
+  This program does not provide legal advice and does not take the place of advice from an lawyer.
+  
+  Using this program does not create an attorney-client relationship between you and Illinois Legal Aid Online or its employees.
+# added help button that provides more information and a link to find a lawyer
+help:  
+  label: Find a Lawyer
+  content: |
+    If you have questions or concerns about your legal problem and
+    want legal advice, you should talk to a lawyer.
+    
+    [Click here](https://www.illinoislegalaid.org/get-legal-help) if you would
+    like help finding free or low-cost legal service in your area.   
+continue button field: not_legal_advice
+---
+comment: |
+  Gives brief overview of what information will be needed to complete the form.
+id: info_needed
+question: |
+  Information Needed to Complete Form
+subquestion: |
+  To complete this program, you will need to know the following information:
+  
+  * Case Number,
+  * Courthouse address,
+  * Name and address of the Debtor,
+  * Name and address of the Debtor's Employer,
+  * Date of the judgment or the date it was renewed/revived
+  * Amount of the judgement, and
+  * Amount that remains unpaid.
+continue button field: info_needed
+---
+comment: |
+  Explains that the post-judgment collection form can only be used within 7 years of the judgment.
+id: age_of_judgment
+question: |
+  Restriction on the Age of the Judgment
+subquestion: |
+  You can only collect a money judgment that:
+  
+  * Is less than 7 years old, or	
+  * Was renewed ("revived") in the last 7 years
+# provide more information on the timeline for collecting money judgment along with a link to another website for help.  
+help: 
+  label: Learn More
+  content: |
+    You can renew ("revive") a judgment up to 20 years from the date of your judgment. 
+    
+    To start the process, you must file a Petition to Revive judgment. 
+    
+    Check with the circuit clerk's office to get a Petition to Revive.
+    
+    If your judgment is over 27 years old, you cannot enforce your judgment. [Click here](https://www.illinoislegalaid.org/legal-information/how-long-does-judgment-last) to learn more about how long a judgment lasts.
+
+continue button field: age_of_judgment
+---
+comment: | 
+  Screen to gather the user's contact information.
+id: users_contact
+question: |
+  Enter a way to contact you.
+fields:
+  - "Enter a phone number": users_phone_number
+    required: False
+  - "Enter an email address": users_email_address
+    required: False
+    # allows for user to continue through the interview if they do not have a phone number or email address
+continue button field: users_contact
+---
+id: users_attorneys_phone_number
+question: |
+  If you have an attorney, enter their phone number below. 
+  
+  If you do not have an attorney, click "Next" below.
+fields:
+  - "Enter your attorney's phone number": users_attorneys_phone_number
+    maxlength: 35
+    required: False
+    # allows user to continue through interview in case user does not have attorney
+continue button field: users_attorneys_phone_number
+---
+comment: |
+  Gather information on the plaintiff and explains who the plaintiff is.
+id: plaintiffs_full_name
+question: |
+  Plaintiff Name
+subquestion: |
+  Enter the plaintiff's name. 
+  
+  If you are the plaintiff, enter your name.
+# gives more information on who the plaintiff in a case is
+help:
+  label: Who Is the Plaintiff?
+  content: |
+    Whoever filed the lawsuit is the Plaintiff.
+    
+    This information can be found at the top of the first page of your judgment.
+    
+    It should list the people involved in your case as Plaintiffs and Defendants, on separate lines separated by a "v."
+    
+    In some cases, the Plaintiff is called the Petitioner.
+fields:
+  - "Plaintiff's Name": plaintiffs_full_name
+    maxlength: 43
+---
+comment: |
+  Gather information on the defendant and explains who the defendant is.
+id: defendants_full_name
+question: |
+  Defendant's Name
+subquestion: |
+  Enter the defendant's name. 
+  
+  If you are the defendant, enter your name.
+# gives more information on who the defendant in a case is
+help:
+  label: Who is the Defendant?
+  content: |
+    Whoever received the lawsuit is the Defendant. 
+    
+    This information can be found at the top of the first page of your judgment.
+        
+    It should list the people involved in your case as Plaintiffs and Defendants, on separate lines separated by a "v."
+    
+    In some cases, the Defendant  is called the Respondent.
+fields:
+  - "Defendant's Name": defendants_full_name
+    maxlength: 43
+---
+comment: |
+  Gather information on the debtor and explains who the debtor is.
+id: debtors_info
+question: |
+  Debtor's Information
+subquestion: |
+  This step asks questions about the person or company you won your judgment against.
+  
+  They are called the "debtor."
+  
+  If the debtor is a
+  person, enter the name
+  and address for the
+  debtor.
+  
+  If the debtor is
+  a business, enter the
+  name and address of the
+  Registered Agent.
+# provide a link to find the registered agent of a business.
+help:
+  label: Find Registered Agent
+  content: |
+    The Registered Agent can be found [here](https://apps.ilsos.gov/businessentitysearch/)
+fields:
+  - "Debtor's Name": debtors_name_full0
+    maxlength: 70
+  - "Street, Apt #": debtors_address_line_one
+    maxlength: 70
+  - "City, State, ZIP": debtors_address_line_two
+    maxlength: 71
+    # re-labeled the address fields to provide more detail on what information is needed
+continue button field: debtors_info
+---
+code: |
+  - debtors_name_full1 == debtors_name_full0
+  - debtors_name_full2 == debtors_name_full0
+# made it so the user does not have to enter repeat information
+---
+comment: |
+  Gather information on the debtor's employer. Provide explanation that the employer must "do business" in IL to collect a judgment from it.
+id: respondents_name0
+question: |
+  Debtor's Employer Name
+subquestion: |
+  Enter the name of the debtor's employer.
+  
+  The employer must "do business" in Illinois.
+# provide infomration on what it means to "do business"
+help:
+  label: What does "Do Business" mean?
+  content:  |
+    A company or an employer "does business" in Illinois if it has:
+    
+    * An office, store, or headquarters located in Illinois,
+    * A factory, warehouse, or other facility located in Illinois, OR
+    * Customers who live in Illinois.
+fields:
+  - "Employer's Name": respondents_name0
+    maxlength: 43
+---
+code: |
+  - respondents_name1 == respondents_name0
+  - respondents_name2 == respondents_name0
+# made it so the user does not have to enter repeat information
+---
+comment: |
+  Gather the address of the debtor's employer.
+id: respondents_address0
+question: |
+  Enter the address of the debtor's employer
+subquestion:  |
+  If the employer is a person, enter that person's address.
+  
+  If the employer is a company, enter the address of the officer or
+  Registered Agent.
+# provide information on how to find a business' registered agent
+help:
+  label: Find address of officer or registered agent
+  content:  |
+    The officer or registered agent can be found [here](https://apps.ilsos.gov/businessentitysearch/)
+fields:
+  - "Street, Apt #": respondents_address_line_one
+    maxlength: 70
+  - "City, State, ZIP": respondents_address_line_two
+    maxlength: 71
+    # re-labeled the address fields to provide more detail on what information is needed
+continue button field: respondents_address0
+---
+comment: |
+  Provide information on what needs to be done after filing the form with the court.
+id: After_Filing_with_the_Court
+question: |
+  After Filing with the Court
+subquestion: |
+  IMPORTANT: 
+  After you file your forms with the court, you must deliver them to an officer or registered agent of debtor's employer.
+  
+  You can find more information in the How to do a Citation to Discover Assets to Debtor's Employer ("Wage deduction/Garnishment") instructions [here](https://ilcourtsaudio.blob.core.windows.net/antilles-resources/resources/7ba7f41a-92b3-43d2-93a8-79b799c8ef45/Citation_Debtors_Employer_Instructions.pdf)
+# provide a link to a pdf of the instructions
+continue button field: After_Filing_with_the_Court
+---
+comment: |
+  Gather the court case number.
+id: docket_number0
+question: |
+  Case Number
+subquestion: |
+  Enter the case number, also known as the docket number.
+fields:
+  - "Case Number": docket_number0
+    maxlength: 24
+---
+code: |
+  - docket_number1 == docket_number0
+  - docket_number2 == docket_number0
+  - docket_number3 == docket_number0
+  - docket_number4 == docket_number0
+  - docket_number5 == docket_number0
+  - docket_number6 == docket_number0
+# reduced amount of times user needs to enter repeat information
+---
+comment: |
+  Gather the court county for the case.
+id: circuit_court_county0
+question: |
+  County
+subquestion: |
+  Enter the county in which your case was filed.
+fields:
+  - "Circuit Court County": circuit_court_county0
+    maxlength: 20
+---
+code: |
+  - circuit_court_county1 == circuit_court_county0
+  - circuit_court_county2 == circuit_court_county0
+# reduced amount of times user needs to enter repeat information
+---
+comment: |
+  Gather the amount of the judgment. Explain that the judgment amount is not necessarily what is owed.
+id: judgment_amount
+question: |
+  Judgment Amount
+subquestion: |
+  Enter the judgment amount.
+  
+  In other words, on the judgment date, how much was the debtor ordered to pay you?
+  
+  This does not include court costs or interest. That will be calculated in the Amount Owed, on the next screen.
+fields:
+  - "Judgment Amount": judgment_amount
+    datatype: currency
+    min: 0
+---
+comment: |
+  Gather the amount owed and give a brief explanation of what may be included in the owed amount.
+id: owed_amount
+question: |
+  Amount Owed
+subquestion: |
+  Enter the amount that the debtor still owes you.
+  
+  The amount still owed to you can include:
+  
+  * The judgment amount,
+  * Your court costs (like filing fees, service fees, sheriff's fee, etc.), and
+  * Post judgment interest.
+  
+  You must subtract any payments already made to you by the debtor.
+fields:
+  - "Amount Owed": owed_amount
+    datatype: currency
+    min: 0
+---
+comment: |
+  Get the judgment date.
+id: judgment_date
+question: |
+  Judgment Date
+subquestion: |
+  Enter the judgment date. If the judgment was "renewed" or "revived," enter that date.
+fields:
+  - "Judgment Date": judgment_date
+    datatype: date
+    # allows the user to pick the date from a calendar. 
+---
+id: Hearing_Date_and_Time
+question: |
+  Hearing Date and Time
+subquestion: |
+  Enter the date of your hearing. 
+  
+  If you do not know, you can get this information from the circuit court clerk. 
+  
+  The information might be listed on the Circuit Court Clerk's website. 
+  Find it on the [Illinois Courts website](https://www.illinoiscourts.gov/courts-directory/interactive-map)
+  
+  You must put the hearing date and time on your Citation before you deliver it to the debtor's employer.
+fields:
+  - "Hearing Date": court_date
+    datatype: date
+    required: False
+  - "Hearing Time": court_time
+    datatype: time 
+    required: False
+    # changed field so user picks time from pop-up menu and not entering the time manually
+  - "AM": am
+    datatype: yesno
+    required: False
+  - "PM": pm
+    datatype: yesno
+    required: False
+    # need the AM and PM fields due to the way DocAssemble checks off AM or PM on the document
+validation code: |
+  if court_date == today():
+    validation_error("The Hearing Date must be after Today.")
+# the hearing date cannot be the current date.  
+continue button field: Hearing_Date_and_Time
+---
+code:  |
+datetime.time.min: time(0, 0, 0, 0)
+datetime.time.max: time(12, 0, 0, 0)
+datetime.time.hour: range(12)
+court_time: format_time(format='h:mm')
+# changed the format of the pop-up clock for the user to pick the time from
+---
+comment: |
+  Ask whether the hearing is set to be in person or remote.
+id: In_Person_or_Remote
+question: |
+  In-Person or Remote?
+subquestion: |
+  Is your hearing in-person or remote?
+  
+  In person hearings mean you and the debtor need to go to the courthouse.
+  
+  Remote hearings can be by phone or video.
+fields:
+  - "In Person": in_person
+    datatype: yesno
+  - "By Phone or Video": by_phone_video
+    datatype: yesno
+continue button field: In_Person_or_Remote
+---
+comment: |
+  If hearing is in person, get the courtroom number.
+id: In_Person_Court_Room
+question: |
+  In-Person Court Room
+subquestion: |
+  If the hearing is in-person, enter the court room number assigned.
+fields:
+  - "Court Room": court_room
+    maxlength: 16
+continue button field: In_Person_Court_Room
+---
+comment: |
+  If hearing is in person, get the address of the courthouse.
+id: courts_address
+question: |
+  Court Address
+subquestion:  |
+  Enter the address of the court.
+help:
+  label: Find the court address.
+  content:  |
+    The court address can be found using an interactive map [here](https://www.illinoiscourts.gov/courts-directory/interactive-map)
+# provide link to find the address of the courthouse
+fields:
+  - "Street, Apt #": courts_address_line_one
+    maxlength: 70
+  - "City, State, ZIP": courts_address_line_two
+    maxlength: 71
+continue button field: courts_address
+---
+comment: |
+  If hearing is remote, get the information on how to attend the hearing.
+id: Remote_Hearing_Information
+question: |
+  Remote Hearing Information
+subquestion: |
+  If the hearing is by phone or video, enter the information required to attend the hearing.
+fields:
+  - "How to Appear by Phone or Video": information_instruction_attend_phone_video
+    input type: area
+    maxlength: 132
+continue button field: Remote_Hearing_Information
+---
+comment: |
+  If hearing is remote, get the phone number of the circuit clerk office.
+id: circuit_clerk_office_phone_number
+question: |
+  Circuit Clerk Office's Phone Number
+subquestion: |
+  Enter the circuit clerk office's phone number.
+  
+  The information might be listed on the Circuit Court Clerk's website. Find it on the [Illinois Courts website](https://www.illinoiscourts.gov/courts-directory/interactive-map)
+# provide a link to get information on the circuit court clerk's office
+fields:
+  - "Circuit Clerk Office's Phone Number": circuit_clerk_office_phone_number
+    maxlength: 38
+continue button field: circuit_clerk_office_phone_number
+---
+id: preview citation_debtors_employerpdf_filena
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_citation_debtors_employerpdf_filena'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: citation_debtors_employerpdf_filena_preview_question    
+---
+code: |
+  signature_fields = ['users[0].signature']
+---
+code: |
+  plaintiff_or_defendant = DAEmpty()
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+id: citation debtors employerpdf filena review screen
+event: review_citation_debtors_employerpdf_filena
+question: |
+  Review your answers
+review:
+  - Edit: circuit_court_county0
+    button: |
+      **Court County**:
+      ${ circuit_court_county1 }
+  - Edit: plaintiffs.revisit
+    button: |
+      **Plaintiffs**
+
+      % for item in plaintiffs:
+        * ${ item }
+      % endfor
+  - Edit: defendants.revisit
+    button: |
+      **Defendants**
+
+      % for item in defendants:
+        * ${ item }
+      % endfor
+  - Edit: respondents_name0
+    button: |
+      **Employer's Name**:
+      ${ respondents_name1 }
+  - Edit: respondents.revisit
+    button: |
+      **Respondents**
+
+      % for item in respondents:
+        * ${ item }
+      % endfor
+  - Edit: docket_number0
+    button: |
+      **Case Number**:
+      ${ docket_number1 }
+  - Edit: debtors_name_full0
+    button: |
+      **Debtor's Name**:
+      ${ debtors_name_full1 }
+  - Edit: debtors_address_line_one
+    button: |
+      **Debtor's Address Line One**:
+      ${ debtors_address_line_one }
+  - Edit: debtors_address_line_two
+    button: |
+      **Debtor's Address Line Two**:
+      ${ debtors_address_line_two }
+  - Edit: am
+    button: |
+      **AM**:
+      ${ word(yesno(am)) }
+  - Edit: pm
+    button: |
+      **PM**:
+      ${ word(yesno(pm)) }
+  - Edit: court_date
+    button: |
+      **Hearing Date**:
+      ${ court_date }
+  - Edit: court_time
+    button: |
+      **Hearing Time**:
+      ${ court_time }
+  - Edit: in_person
+    button: |
+      **In Person**:
+      ${ word(yesno(in_person)) }
+  - Edit: court_room
+    button: |
+      **Court Room**:
+      ${ court_room }
+  - Edit: courts.revisit
+    button: |
+      **Courts**
+
+      % for item in courts:
+        * ${ item }
+      % endfor
+  - Edit: by_phone_video
+    button: |
+      **By Phone or Video**:
+      ${ word(yesno(by_phone_video)) }
+  - Edit: information_instruction_attend_phone_video
+    button: |
+      **How to Appear by Phone or Video**:
+      > ${ single_paragraph(information_instruction_attend_phone_video) }
+  - Edit: circuit_clerk_office_phone_number
+    button: |
+      **Circuit Clerk Office's Phone Number**:
+      ${ circuit_clerk_office_phone_number }
+  - Edit: docket_number0
+    button: |
+      **Case Number**:
+      ${ docket_number2 }
+  - Edit: debtors_name_full0
+    button: |
+      **Debtor's Name**:
+      ${ debtors_name_full2 }
+  - Edit: judgment_date
+    button: |
+      **Judgment Date**:
+      ${ judgment_date }
+  - Edit: judgment_amount
+    button: |
+      **Judgment Amount**:
+      ${ currency(judgment_amount) }
+  - Edit: docket_number0
+    button: |
+      **Case Number**:
+      ${ docket_number3 }
+  - Edit: owed_amount
+    button: |
+      **Amount Owed**:
+      ${ currency(owed_amount) }
+  - Edit: users.revisit
+    button: |
+      **Users**
+
+      % for item in users:
+        * ${ item }
+      % endfor
+  - Edit: users_attorneys_phone_number
+    button: |
+      **Attorney Number**:
+      ${ users_attorneys_phone_number }
+  - Edit: docket_number0
+    button: |
+      **Case Number**:
+      ${ docket_number4 }
+  - Edit: circuit_court_county0
+    button: |
+      **Circuit Court County**:
+      ${ circuit_court_county2 }
+  - Edit: plaintiffs_full_name
+    button: |
+      **Plaintiff's Name**:
+      ${ plaintiffs_full_name }
+  - Edit: docket_number0
+    button: |
+      **Case Number**:
+      ${ docket_number5 }
+  - Edit: defendants_full_name
+    button: |
+      **Defendant's Name**:
+      ${ defendants_full_name }
+  - Edit: respondents_name0
+    button: |
+      **Employer's Name**:
+      ${ respondents_name2 }
+  - Edit: docket_number0
+    button: |
+      **Case Number**:
+      ${ docket_number6 }
+  - Edit: plaintiff_or_defendant
+    button: |
+      **Are Plaintiff or Defendant?**:
+      ${ plaintiff_or_defendant }
+---
+continue button field: plaintiffs.revisit
+question: |
+  Edit plaintiffs
+subquestion: |
+  ${ plaintiffs.table }
+
+  ${ plaintiffs.add_action() }
+---
+table: plaintiffs.table
+rows: plaintiffs
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+
+---
+continue button field: defendants.revisit
+question: |
+  Edit defendants
+subquestion: |
+  ${ defendants.table }
+
+  ${ defendants.add_action() }
+---
+table: defendants.table
+rows: defendants
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+
+---
+continue button field: respondents.revisit
+question: |
+  Edit respondents
+subquestion: |
+  ${ respondents.table }
+
+  ${ respondents.add_action() }
+---
+table: respondents.table
+rows: respondents
+columns:
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+edit:
+  - address.address
+confirm: True
+
+---
+continue button field: courts.revisit
+question: |
+  Edit courts
+subquestion: |
+  ${ courts.table }
+
+  ${ courts.add_action() }
+---
+table: courts.table
+rows: courts
+columns:
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+edit:
+  - address.address
+confirm: True
+
+---
+continue button field: users.revisit
+question: |
+  Edit users
+subquestion: |
+  ${ users.table }
+
+  ${ users.add_action() }
+---
+table: users.table
+rows: users
+columns:
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+edit:
+  - signature
+  - address.address
+  - name.first
+  - email
+  - phone_number
+confirm: True
+
+---
+id: download citation_debtors_employerpdf_filena
+event: citation_debtors_employerpdf_filena_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_citation_debtors_employerpdf_filena'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - citation_debtors_employerpdf_filena_Post_interview_instructions: ALDocument.using(title="Instructions", filename="citation_debtors_employerpdf_filena_next_steps.docx", enabled=True, has_addendum=False)
+  - citation_debtors_employerpdf_filena_attachment: ALDocument.using(title="Citation To Discover Assets To Debtor's Employer", filename="citation_debtors_employerpdf_filena", enabled=True, has_addendum=False, )
+  # changed label to name of document in the table
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[citation_debtors_employerpdf_filena_Post_interview_instructions, citation_debtors_employerpdf_filena_attachment], filename="citation_debtors_employerpdf_filena", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[citation_debtors_employerpdf_filena_attachment],  filename="citation_debtors_employerpdf_filena", title="All forms to deliver to court", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachment:
+  name: Post-interview-Instructions
+  filename: citation_debtors_employerpdf_filena_next_steps
+  docx template file: citation_debtors_employerpdf_filena_next_steps.docx
+  variable name: citation_debtors_employerpdf_filena_Post_interview_instructions[i]
+  skip undefined: True
+  tagged pdf: True
+---
+attachment:
+  name: citation debtors employerpdf filena
+  filename: citation_debtors_employerpdf_filena
+  variable name: citation_debtors_employerpdf_filena_attachment[i]
+  skip undefined: True
+  pdf template file: citation_debtors_employerpdf_filena.pdf
+  fields:
+      - "circuit_court_county1": ${ circuit_court_county0 }
+      - "plaintiffs_name_full": ${ plaintiffs_full_name }
+      - "defendants_name_full": ${ defendants_full_name }
+      - "respondents_name1": ${ respondents_name0 }
+      - "respondents_address_line_one": ${ respondents_address_line_one }
+      - "docket_number1": ${ docket_number0 }
+      - "respondents_address_line_two": ${ respondents_address_line_two }
+      - "debtors_name_full1": ${ debtors_name_full0 }
+      - "debtors_address_line_one": ${ debtors_address_line_one }
+      - "debtors_address_line_two": ${ debtors_address_line_two }
+      - "am": ${ am }
+      - "pm": ${ pm }
+      - "court_date": ${ format_date(court_date, format='MM/dd/yyyy') }
+      # formatted the date so it enters in month/day/year 
+      - "court_time": ${ format_time(court_time, format='h:mm') }
+      # formatted the time to enter as hour and minute, with in a 12-hour format instead of 24-hour
+      - "in_person": ${ in_person }
+      - "court_room": ${ court_room }
+      - "court_address_line_one": ${ courts_address_line_one }
+      - "court_address_line_two": ${ courts_address_line_two }
+      - "by_phone_video": ${ by_phone_video }
+      - "information_instruction_attend_phone_video": ${ information_instruction_attend_phone_video }
+      - "circuit_clerk_office_phone_number": ${ phone_number_formatted(circuit_clerk_office_phone_number) }
+      # changed format of how the phone number is entered
+      - "docket_number2": ${ docket_number0 }
+      - "debtors_name_full2": ${ debtors_name_full0 }
+      - "judgment_date": ${ format_date(judgment_date, format='MM/dd/yyyy') }
+      # formatted the date so it enters in month/day/year 
+      - "judgment_amount": ${ thousands(judgment_amount, show_decimals=True) }
+      - "docket_number3": ${ docket_number0 }
+      - "owed_amount": ${ thousands(owed_amount, show_decimals=True) }
+      - "users_signature": ${ users[0].signature_if_final(i) }
+      - "users_address_line_one": ${ users[0].address.line_one() }
+      - "users_name_full": ${ users[0] }
+      - "users_address_line_two": ${ users[0].address.line_two() }
+      - "users_email": ${ users_email_address }
+      - "users_phone_number": ${ phone_number_formatted(users_phone_number) }
+      # changed format of how the phone number is entered
+      - "users_attorneys_phone_number": ${ phone_number_formatted(users_attorneys_phone_number) }
+      # changed format of how the phone number is entered
+      - "docket_number4": ${ docket_number0 }
+      - "circuit_court_county2": ${ circuit_court_county0 }
+      - "plaintiffs_full_name": ${ plaintiffs_full_name }
+      - "docket_number5": ${ docket_number0 }
+      - "defendants_full_name": ${ defendants_full_name }
+      - "respondents_name2": ${ respondents_name0 }
+      - "docket_number6": ${ docket_number0 }
+
+
+
